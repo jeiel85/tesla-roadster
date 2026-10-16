@@ -79,13 +79,23 @@ export class Roadster {
     this.groundY = roadY - this.height;
 
     // 1. Thruster Physics
+    const ceilingY = 70; // Keep car nicely on screen below top HUD
+    const maxJumpHeight = 220; // Natural altitude ceiling above road
+    const currentAltitude = this.groundY - this.y;
+
     if (this.isThrusting && this.psi > 0) {
-      this.vy += this.thrustForce;
+      // Upward thrust dampens near max altitude so car hovers smoothly
+      const altitudeFactor = Math.max(0.05, 1.0 - (currentAltitude / maxJumpHeight));
+      this.vy += this.thrustForce * altitudeFactor;
+      
+      // Limit upward speed so it doesn't catapult
+      if (this.vy < -4.5) this.vy = -4.5;
+
       this.psi = Math.max(0, this.psi - this.psiDrainRate);
       this.thrusterGlow = Math.min(1.0, this.thrusterGlow + 0.2);
 
       // Rocket pitch tilt: tail down, nose up
-      this.angularVelocity = Math.max(-0.06, this.angularVelocity - 0.005);
+      this.angularVelocity = Math.max(-0.05, this.angularVelocity - 0.004);
 
       // Emit Thruster Plasma Particles from rear SpaceX nozzles
       const nozzleX = this.x + 4;
@@ -106,8 +116,14 @@ export class Roadster {
     // 2. Gravity & Velocity
     this.vy += this.gravity;
     // Terminal fall velocity
-    if (this.vy > 13) this.vy = 13;
+    if (this.vy > 12) this.vy = 12;
     this.y += this.vy;
+
+    // Hard ceiling clamp: never fly off top of the screen!
+    if (this.y < ceilingY) {
+      this.y = ceilingY;
+      if (this.vy < 0) this.vy = 0;
+    }
 
     // 3. Autonomous RCS Attitude Stabilization (Real Tesla Unveil Feature!)
     // As seen in the viral reveal: car uses cold gas thrusters to auto-level before landing

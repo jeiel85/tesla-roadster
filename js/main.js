@@ -122,6 +122,10 @@ class Game {
     window.addEventListener('pointerdown', handlePointerDown);
     window.addEventListener('pointerup', handlePointerUp);
     window.addEventListener('pointercancel', handlePointerUp);
+    window.addEventListener('blur', () => this.onActionEnd());
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) this.onActionEnd();
+    });
   }
 
   bindUI() {
