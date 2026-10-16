@@ -69,6 +69,29 @@ class Game {
 
     // Start Animation Loop
     requestAnimationFrame((t) => this.loop(t));
+
+    // Instant Action Demo Mode for Screenshots/Previews
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('demo') === 'true') {
+      setTimeout(() => {
+        this.startGame();
+        this.car.y = this.city.roadY - 130;
+        this.car.vy = -1.5;
+        this.car.angle = -0.07;
+        this.car.isThrusting = true;
+        this.car.isGrounded = false;
+        this.speed = 135;
+        this.score = 3850;
+        this.combo = 4;
+        this.clearedCars = 6;
+        this.distance = 1840;
+        this.particles.addText(this.car.x + 85, this.car.y - 32, '⚡ CLOSE CALL! +500', '#00d2ff', 18);
+        this.particles.emitThruster(this.car.x + 4, this.car.y + this.car.height - 8, this.car.angle, 1.8);
+        this.traffic.spawnVehicle(this.car.x - 30, this.city.roadY);
+        this.traffic.spawnVehicle(this.car.x + 80, this.city.roadY);
+        this.traffic.spawnVehicle(this.car.x + 230, this.city.roadY);
+      }, 100);
+    }
   }
 
   handleResize() {
