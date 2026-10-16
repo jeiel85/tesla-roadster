@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0c14" />
+      <stop offset="100%" stop-color="#181e30" />
+    </linearGradient>
+    <linearGradient id="redGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff3b42" />
+      <stop offset="100%" stop-color="#e82127" />
+    </linearGradient>
+    <linearGradient id="rocketGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="50%" stop-color="#00d2ff" />
+      <stop offset="100%" stop-color="rgba(0, 210, 255, 0)" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Outer Rounded Badge -->
+  <rect width="64" height="64" rx="14" fill="url(#bg)" stroke="#00d2ff" stroke-width="2" />
+  
+  <!-- Roadster Silhouette / Tesla T -->
+  <path d="M14 22 C22 18 42 18 50 22 C48 25 36 26 32 30 L32 46 C32 48 30 50 28 50 C26 50 24 48 24 46 L24 30 C20 26 16 25 14 22 Z" fill="url(#redGrad)" />
+  <path d="M12 16 C24 14 40 14 52 16 C46 19 38 20 32 20 C26 20 18 19 12 16 Z" fill="#ffffff" />
+  
+  <!-- Cold Gas Thruster Jet Below -->
+  <path d="M26 50 L38 50 L32 62 Z" fill="url(#rocketGlow)" />
+</svg>

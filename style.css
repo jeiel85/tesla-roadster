@@ -1,0 +1,773 @@
+/* ==========================================================================
+   Tesla Roadster: Flight Mode - Stylesheet
+   Theme: High-Tech Cyberpunk & Tesla Minimalist Glassmorphism
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;700&display=swap');
+
+:root {
+  --tesla-red: #e82127;
+  --tesla-red-glow: rgba(232, 33, 39, 0.6);
+  --spacex-blue: #00d2ff;
+  --spacex-blue-glow: rgba(0, 210, 255, 0.6);
+  --neon-cyan: #39ff14;
+  --amber-orange: #ff9900;
+  --dark-bg: #090a0f;
+  --panel-bg: rgba(14, 18, 28, 0.78);
+  --panel-border: rgba(255, 255, 255, 0.12);
+  --text-main: #f0f4fc;
+  --text-muted: #8b9bb4;
+  --font-digital: 'Orbitron', monospace;
+  --font-tech: 'Rajdhani', sans-serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--dark-bg);
+  font-family: var(--font-tech);
+  color: var(--text-main);
+}
+
+#game-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 30%, #151b2c 0%, #08090d 100%);
+}
+
+#gameCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 1;
+}
+
+/* --------------------------------------------------------------------------
+   HUD & UI Overlay Layers
+   -------------------------------------------------------------------------- */
+
+.ui-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 18px 24px;
+}
+
+.hud-box {
+  display: flex;
+  align-items: center;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  padding: 10px 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+  pointer-events: auto;
+  transition: all 0.2s ease;
+}
+
+/* Top Left */
+.ui-layer > div:first-child {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.top-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.brand-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tesla-logo-t {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-digital);
+  font-weight: 900;
+  color: #fff;
+  background: var(--tesla-red);
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  font-size: 16px;
+  box-shadow: 0 0 10px var(--tesla-red-glow);
+}
+
+.brand-text {
+  font-family: var(--font-digital);
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  font-size: 14px;
+  color: #fff;
+}
+
+.badge-spacex {
+  background: rgba(0, 210, 255, 0.15);
+  color: var(--spacex-blue);
+  border: 1px solid rgba(0, 210, 255, 0.4);
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-left: 4px;
+  letter-spacing: 1px;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-family: var(--font-digital);
+  color: var(--text-muted);
+}
+
+.indicator-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #555;
+}
+
+.indicator-dot.active {
+  background: var(--spacex-blue);
+  box-shadow: 0 0 8px var(--spacex-blue);
+  animation: pulse-dot 1.5s infinite;
+}
+
+.indicator-dot.stabilizing {
+  background: var(--amber-orange);
+  box-shadow: 0 0 10px var(--amber-orange);
+  animation: pulse-dot 0.5s infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+/* Top Center: Score */
+.top-center {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 180px;
+  background: rgba(14, 18, 28, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.score-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.label {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.digital-val {
+  font-family: var(--font-digital);
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.combo-display {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  animation: bounce-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.combo-display.hidden {
+  display: none;
+}
+
+.combo-badge {
+  background: var(--tesla-red);
+  color: #fff;
+  font-family: var(--font-digital);
+  font-size: 12px;
+  font-weight: 900;
+  padding: 1px 6px;
+  border-radius: 4px;
+  box-shadow: 0 0 8px var(--tesla-red);
+}
+
+.combo-text {
+  font-family: var(--font-digital);
+  font-size: 11px;
+  color: #ffde59;
+  letter-spacing: 1px;
+}
+
+/* Top Right */
+.top-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.stat-group {
+  display: flex;
+  gap: 16px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.stat-item .digital-val {
+  font-size: 18px;
+}
+
+.unit {
+  font-size: 9px;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+.icon-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.icon-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Bottom Controls */
+.ui-layer > div:last-child {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 100%;
+}
+
+/* Bottom Left: Speedometer */
+.bottom-left {
+  padding: 12px 18px;
+}
+
+.speed-cluster {
+  display: flex;
+  flex-direction: column;
+}
+
+.speed-number {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.digital-big {
+  font-family: var(--font-digital);
+  font-size: 42px;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+}
+
+.speed-unit {
+  font-family: var(--font-digital);
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.speed-sub {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.sub-badge {
+  background: linear-gradient(90deg, var(--tesla-red), #ff5e62);
+  color: #fff;
+  font-size: 10px;
+  font-family: var(--font-digital);
+  font-weight: 900;
+  padding: 2px 8px;
+  border-radius: 3px;
+  letter-spacing: 1px;
+}
+
+/* Bottom Right: Cold Gas Thruster Bar */
+.bottom-right {
+  min-width: 260px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+}
+
+.gauge-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.gauge-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--spacex-blue);
+}
+
+.gauge-num {
+  font-family: var(--font-digital);
+  font-size: 12px;
+  color: #fff;
+}
+
+.gauge-bar-bg {
+  width: 100%;
+  height: 12px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  position: relative;
+}
+
+.gauge-bar-fill {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #0088ff, var(--spacex-blue), #80f0ff);
+  border-radius: 5px;
+  box-shadow: 0 0 12px var(--spacex-blue-glow);
+  transition: width 0.08s linear;
+}
+
+.gauge-bar-fill.warning {
+  background: linear-gradient(90deg, #ff4e50, #f9d423);
+  box-shadow: 0 0 12px rgba(255, 100, 0, 0.7);
+}
+
+.gauge-caption {
+  font-size: 9px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+  text-align: center;
+  margin-top: 2px;
+}
+
+/* Mobile Prompt */
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-only {
+    display: flex;
+    position: absolute;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 15;
+    pointer-events: none;
+  }
+  .touch-prompt {
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.7);
+    background: rgba(0, 0, 0, 0.5);
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    animation: pulse-dot 2s infinite;
+  }
+  .ui-layer {
+    padding: 10px 12px;
+  }
+  .digital-big {
+    font-size: 28px;
+  }
+  .bottom-right {
+    min-width: 180px;
+  }
+  .badge-spacex {
+    display: none;
+  }
+  .stat-item .digital-val {
+    font-size: 14px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Screen Overlays (Modals & Cards)
+   -------------------------------------------------------------------------- */
+
+.overlay-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 50;
+  background: rgba(5, 7, 12, 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+  padding: 16px;
+}
+
+.overlay-screen.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.overlay-card {
+  max-width: 540px;
+  width: 100%;
+  background: rgba(16, 21, 34, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 16px;
+  padding: 32px 36px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(0, 210, 255, 0.1);
+  text-align: center;
+  animation: scale-up 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mini-card {
+  max-width: 360px;
+  padding: 28px;
+}
+
+.badge-super {
+  display: inline-block;
+  background: rgba(232, 33, 39, 0.15);
+  border: 1px solid var(--tesla-red);
+  color: #ff555b;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 14px;
+}
+
+.game-title {
+  font-family: var(--font-digital);
+  font-size: 34px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  color: #fff;
+  line-height: 1.1;
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.title-sub {
+  font-size: 14px;
+  letter-spacing: 6px;
+  color: var(--tesla-red);
+}
+
+.title-highlight {
+  background: linear-gradient(90deg, var(--spacex-blue), #ffffff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 20px rgba(0, 210, 255, 0.5);
+  font-size: 26px;
+  margin-top: 4px;
+}
+
+.tagline {
+  font-size: 15px;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 20px;
+}
+
+.announcement-quote {
+  background: rgba(0, 210, 255, 0.06);
+  border-left: 3px solid var(--spacex-blue);
+  padding: 12px 16px;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 20px;
+  text-align: left;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.6;
+  color: #d8e2f0;
+}
+
+.quote-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+  color: var(--spacex-blue);
+  font-size: 12px;
+  font-family: var(--font-tech);
+}
+
+.dot-live {
+  width: 6px;
+  height: 6px;
+  background: #ff3333;
+  border-radius: 50%;
+  animation: pulse-dot 1s infinite;
+}
+
+.instructions-panel {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+}
+
+.ctrl-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.key-badge {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  font-family: var(--font-digital);
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  color: #fff;
+}
+
+.ctrl-desc {
+  font-size: 13px;
+  color: #cbd5e1;
+  font-family: var(--font-sans);
+}
+
+.tips-row {
+  font-size: 12px;
+  color: #ffde59;
+  border-top: 1px dashed rgba(255, 255, 255, 0.1);
+  padding-top: 8px;
+  line-height: 1.4;
+  font-family: var(--font-sans);
+}
+
+.btn-group {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.btn {
+  font-family: var(--font-digital);
+  font-size: 15px;
+  font-weight: 700;
+  padding: 14px 28px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  letter-spacing: 1.5px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--tesla-red) 0%, #ff3b42 100%);
+  color: #fff;
+  box-shadow: 0 6px 20px var(--tesla-red-glow);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px var(--tesla-red-glow);
+}
+
+.pulse-btn {
+  animation: pulse-shadow 2s infinite;
+}
+
+@keyframes pulse-shadow {
+  0%, 100% { box-shadow: 0 6px 20px var(--tesla-red-glow); }
+  50% { box-shadow: 0 6px 30px rgba(232, 33, 39, 0.9); }
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.16);
+  transform: translateY(-2px);
+}
+
+.high-score-record {
+  font-size: 12px;
+  font-family: var(--font-digital);
+  color: var(--text-muted);
+}
+
+.high-score-record strong {
+  color: #ffde59;
+}
+
+/* Game Over Styles */
+.game-over-banner {
+  color: var(--tesla-red);
+  font-family: var(--font-digital);
+  font-size: 12px;
+  letter-spacing: 3px;
+  font-weight: 900;
+  margin-bottom: 6px;
+}
+
+.result-title {
+  font-family: var(--font-digital);
+  font-size: 28px;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.result-sub {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+  font-family: var(--font-sans);
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.result-box {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.highlight-box {
+  grid-column: span 2;
+  background: rgba(0, 210, 255, 0.08);
+  border-color: rgba(0, 210, 255, 0.3);
+}
+
+.res-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+}
+
+.res-num {
+  font-family: var(--font-digital);
+  font-size: 24px;
+  font-weight: 900;
+  color: #fff;
+  margin-top: 2px;
+}
+
+.highlight-box .res-num {
+  font-size: 32px;
+  color: var(--spacex-blue);
+  text-shadow: 0 0 15px var(--spacex-blue-glow);
+}
+
+.new-record-badge {
+  background: linear-gradient(90deg, #ffde59, #ff9900);
+  color: #000;
+  font-family: var(--font-digital);
+  font-size: 13px;
+  font-weight: 900;
+  padding: 6px 16px;
+  border-radius: 20px;
+  margin-bottom: 18px;
+  display: inline-block;
+  animation: bounce-in 0.5s ease;
+}
+
+.new-record-badge.hidden {
+  display: none;
+}
+
+/* Animations */
+@keyframes scale-up {
+  0% { transform: scale(0.92); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes bounce-in {
+  0% { transform: scale(0.7); opacity: 0; }
+  80% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
