@@ -13,92 +13,91 @@
   <meta property="og:image" content="https://raw.githubusercontent.com/jeiel85/tesla-roadster/main/assets/preview.png">
   <meta name="theme-color" content="#0d0e15">
 
+  <!-- Anti-cache meta -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=20261016_3">
 </head>
 <body>
   <div id="game-container">
     <!-- Main Canvas -->
     <canvas id="gameCanvas"></canvas>
 
-    <!-- In-Game HUD -->
-    <div id="hud" class="ui-layer">
-      <!-- Top Bar: Brand, Score, Stats -->
-      <header class="hud-top-bar">
-        <!-- Top Left: Brand & Status -->
-        <div class="hud-box top-left">
-          <div class="brand-title">
-            <span class="tesla-logo-t">T</span>
-            <span class="brand-text">ROADSTER <span class="badge-spacex">SpaceX THRUSTER</span></span>
-          </div>
-          <div class="status-indicator">
-            <span id="rcsIndicator" class="indicator-dot active"></span>
-            <span id="statusText">RCS READY</span>
-          </div>
+    <!-- In-Game HUD: Completely non-blocking absolute corners -->
+    <div id="hud">
+      <!-- Top Left: Brand & Status -->
+      <div class="hud-item hud-top-left">
+        <div class="brand-title">
+          <span class="tesla-logo-t">T</span>
+          <span class="brand-text">ROADSTER <span class="badge-spacex">SpaceX THRUSTER</span></span>
         </div>
+        <div class="status-indicator">
+          <span id="rcsIndicator" class="indicator-dot active"></span>
+          <span id="statusText">RCS READY</span>
+        </div>
+      </div>
 
-        <!-- Top Center: Score & Combo -->
-        <div class="hud-box top-center">
-          <div class="score-display">
-            <span class="label">SCORE</span>
-            <span id="scoreVal" class="digital-val">0</span>
-          </div>
-          <div id="comboContainer" class="combo-display hidden">
-            <span id="comboMultiplier" class="combo-badge">x2</span>
-            <span class="combo-text">COMBO!</span>
-          </div>
+      <!-- Top Center: Score & Combo -->
+      <div class="hud-item hud-top-center">
+        <div class="score-display">
+          <span class="label">SCORE</span>
+          <span id="scoreVal" class="digital-val">0</span>
         </div>
+        <div id="comboContainer" class="combo-display hidden">
+          <span id="comboMultiplier" class="combo-badge">x2</span>
+          <span class="combo-text">COMBO!</span>
+        </div>
+      </div>
 
-        <!-- Top Right: Distance & Traffic Cleared -->
-        <div class="hud-box top-right">
-          <div class="stat-group">
-            <div class="stat-item">
-              <span class="label">CLEARED</span>
-              <span id="clearedVal" class="digital-val">0</span>
-              <span class="unit">CARS</span>
-            </div>
-            <div class="stat-item">
-              <span class="label">DIST</span>
-              <span id="distanceVal" class="digital-val">0.0</span>
-              <span class="unit">KM</span>
-            </div>
+      <!-- Top Right: Distance & Traffic Cleared & Sound -->
+      <div class="hud-item hud-top-right">
+        <div class="stat-group">
+          <div class="stat-item">
+            <span class="label">CLEARED</span>
+            <span id="clearedVal" class="digital-val">0</span>
+            <span class="unit">CARS</span>
           </div>
-          <button id="soundToggleBtn" class="icon-btn" title="사운드 켜기/끄기" aria-label="Toggle Sound">
-            <span id="soundIcon">🔊</span>
-          </button>
+          <div class="stat-item">
+            <span class="label">DIST</span>
+            <span id="distanceVal" class="digital-val">0.0</span>
+            <span class="unit">KM</span>
+          </div>
         </div>
-      </header>
+        <button id="soundToggleBtn" class="icon-btn" title="사운드 켜기/끄기" aria-label="Toggle Sound">
+          <span id="soundIcon">🔊</span>
+        </button>
+      </div>
 
-      <!-- Bottom Bar: Speedometer, Thruster Gauge -->
-      <footer class="hud-bottom-bar">
-        <!-- Bottom Left: Speedometer & 0-60 Flash Gauge -->
-        <div class="hud-box bottom-left">
-          <div class="speed-cluster">
-            <div class="speed-number">
-              <span id="speedVal" class="digital-big">0</span>
-              <span class="speed-unit">MPH</span>
-            </div>
-            <div class="speed-sub">
-              <span class="label">ACCEL</span>
-              <span id="accelMode" class="sub-badge">PLAID</span>
-            </div>
+      <!-- Bottom Left: Speedometer & 0-60 Flash Gauge -->
+      <div class="hud-item hud-bottom-left">
+        <div class="speed-cluster">
+          <div class="speed-number">
+            <span id="speedVal" class="digital-big">0</span>
+            <span class="speed-unit">MPH</span>
+          </div>
+          <div class="speed-sub">
+            <span class="label">ACCEL</span>
+            <span id="accelMode" class="sub-badge">PLAID</span>
           </div>
         </div>
+      </div>
 
-        <!-- Bottom Right: Cold Gas Thruster PSI & Battery Gauge -->
-        <div class="hud-box bottom-right">
-          <div class="thruster-gauge-wrapper">
-            <div class="gauge-header">
-              <span class="gauge-title">COLD GAS THRUSTER</span>
-              <span id="psiVal" class="gauge-num">10,000 PSI</span>
-            </div>
-            <div class="gauge-bar-bg">
-              <div id="thrusterBar" class="gauge-bar-fill"></div>
-            </div>
-            <div class="gauge-caption">HOLD TO HOVER & BOOST</div>
+      <!-- Bottom Right: Cold Gas Thruster PSI Gauge -->
+      <div class="hud-item hud-bottom-right">
+        <div class="thruster-gauge-wrapper">
+          <div class="gauge-header">
+            <span class="gauge-title">COLD GAS THRUSTER</span>
+            <span id="psiVal" class="gauge-num">10,000 PSI</span>
           </div>
+          <div class="gauge-bar-bg">
+            <div id="thrusterBar" class="gauge-bar-fill"></div>
+          </div>
+          <div class="gauge-caption">HOLD TO HOVER & BOOST</div>
         </div>
-      </footer>
+      </div>
     </div>
 
     <!-- Mobile Touch Control Area -->
@@ -211,6 +210,6 @@
   </div>
 
   <!-- Game Scripts (Modular ES6) -->
-  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/main.js?v=20261016_3"></script>
 </body>
 </html>
