@@ -1,0 +1,16 @@
+{
+  "name": "Tesla Roadster: Flight Mode",
+  "short_name": "Roadster Flight",
+  "description": "로켓 스러스터로 꽉 막힌 도심 교통체증을 뛰어넘는 아케이드 웹게임",
+  "lang": "ko",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0d0e15",
+  "theme_color": "#0d0e15",
+  "icons": [
+    { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

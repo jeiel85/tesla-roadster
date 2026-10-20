@@ -134,7 +134,7 @@ class Game {
     // Mouse & Touch Pointer inputs
     const handlePointerDown = (e) => {
       // Don't trigger if clicking HUD buttons
-      if (e.target.closest('#hud button') || e.target.closest('.overlay-card button')) return;
+      if (e.target.closest('#hud button') || e.target.closest('.overlay-card button') || e.target.closest('.overlay-card a')) return;
       this.onActionStart();
     };
 
@@ -462,3 +462,12 @@ class Game {
 window.addEventListener('DOMContentLoaded', () => {
   new Game();
 });
+
+// Offline/installable PWA support.
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch((error) => {
+      console.warn('Service worker registration failed:', error);
+    });
+  });
+}
